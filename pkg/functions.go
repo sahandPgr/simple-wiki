@@ -16,6 +16,9 @@ type Page struct {
 // save Page to file
 func (p *Page) save() error {
 	filename := p.Title + ".txt"
+	if _, err := os.Stat("data"); os.IsNotExist(err) {
+		os.Mkdir("data", 0700)
+	}
 	return os.WriteFile("data/"+filename, p.Body, 0600)
 }
 
@@ -67,4 +70,9 @@ func saveHandler(w http.ResponseWriter, r *http.Request, title string) {
 		return
 	}
 	http.Redirect(w, r, "/view/"+title, http.StatusFound)
+}
+
+// Front page handler
+func FrontPageHandler(w http.ResponseWriter, r *http.Request) {
+	http.Redirect(w, r, "/view/FrontPage", http.StatusFound)
 }

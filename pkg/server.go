@@ -39,10 +39,6 @@ func (fs ServerConfig) InitializeHandlerFunctions() error {
 	staticDirectory = fs.staticDirectory
 	fmt.Println("Initializing the handler functions...")
 
-	// if _, err := os.Stat("data"); os.IsNotExist(err) {
-	// 	fmt.Printf("error: %s", err)
-	// }
-
 	if err := validateFolder(staticDirectory); err != nil {
 		return errors.New("couldn't validate static folder, error: " + err.Error())
 	}
@@ -50,6 +46,7 @@ func (fs ServerConfig) InitializeHandlerFunctions() error {
 	templates = template.Must(template.ParseFiles(staticDirectory+"/edit.html", staticDirectory+"/view.html"))
 	validPath = regexp.MustCompile("^/(edit|save|view)/([a-zA-Z0-9]+)$")
 
+	http.HandleFunc("/", FrontPageHandler)
 	http.HandleFunc("/view/", makeHandler(viewHandler))
 	http.HandleFunc("/edit/", makeHandler(editHandler))
 	http.HandleFunc("/save/", makeHandler(saveHandler))
